@@ -31,7 +31,8 @@ function createMainWindow() {
     icon: APPICON,
     webPreferences: {
       nodeIntegration: false, // fails without this because of CommonJS script detection
-      preload: PATH.join(__dirname, 'js', 'browser.js')
+      preload: PATH.join(__dirname, 'js', 'browser.js'),
+      plugins: true
     }
   });
 
@@ -78,6 +79,8 @@ if (shouldQuit) {
   APP.quit();
   return;
 }
+
+APP.commandLine.appendSwitch('ppapi-flash-path', '/opt/google/chrome/PepperFlash/libpepflashplayer.so');
 
 APP.on('ready', () => {
   sysTray = new TRAY(APPICON);
