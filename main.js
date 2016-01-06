@@ -1,51 +1,51 @@
 'use strict';
 
 // Change these to customize the app
-const URL = 'http://player.spotify.com/?http=1';
-const HEIGHT = 750;
-const WIDTH = 1200;
+var url = 'http://player.spotify.com/?http=1';
+var height = 750;
+var width = 1200;
 
 // Everything below this should be the same for most apps
-const ELECTRON = require('electron');
-const PATH = require('path');
-const MENU = ELECTRON.Menu;
-const TRAY = ELECTRON.Tray;
-const APP = ELECTRON.app;
-const APPNAME = APP.getName();
-const BROWSERWINDOW = ELECTRON.BrowserWindow;
-const APPICON = PATH.join(__dirname, 'images', 'app.png');
-const IPC = ELECTRON.ipcMain;
+var electron = require('electron');
+var path = require('path');
+var menu = electron.Menu;
+var tray = electron.Tray;
+var app = electron.app;
+var appName = app.getName();
+var browserWindow = electron.BrowserWindow;
+var appIcon = path.join(__dirname, 'images', 'app.png');
+var ipc = electron.ipcMain;
 
-ELECTRON.crashReporter.start();
+electron.crashReporter.start();
 
 var mainWindow;
 var sysTray;
 var isQuitting = false;
 
 function createMainWindow() {
-  const WIN = new ELECTRON.BrowserWindow({
-    title: APPNAME,
+  var win = new electron.BrowserWindow({
+    title: appName,
     show: false,
-    height: HEIGHT,
-    width: WIDTH,
-    icon: APPICON,
+    height: height,
+    width: width,
+    icon: appIcon,
     webPreferences: {
       nodeIntegration: false, // fails without this because of CommonJS script detection
-      preload: PATH.join(__dirname, 'js', 'browser.js'),
+      preload: path.join(__dirname, 'js', 'browser.js'),
       plugins: true
     }
   });
 
-  WIN.loadURL(URL);
+  win.loadURL(url);
 
-  WIN.on('close', e => {
+  win.on('close', e => {
     if (!isQuitting) {
       e.preventDefault();
-      WIN.hide();
+      win.hide();
     }
   });
 
-  return WIN;
+  return win;
 }
 
 function showAndCenter(win) {
@@ -55,20 +55,20 @@ function showAndCenter(win) {
 }
 
 function center(win) {
-  var electronScreen = ELECTRON.screen;
+  var electronScreen = electron.screen;
   var size = electronScreen.getPrimaryDisplay().workAreaSize;
-  var x = Math.round(size['width'] / 2 - WIDTH / 2);
-  var y = Math.round(size['height'] / 2 - HEIGHT / 2);
+  var x = Math.round(size['width'] / 2 - width / 2);
+  var y = Math.round(size['height'] / 2 - height / 2);
   win.setPosition(x, y);
 }
 
-APP.on('window-all-closed', () => {
+app.on('window-all-closed', () => {
   if (process.platform != 'darwin') {
-    APP.quit();
+    app.quit();
   }
 });
 
-var shouldQuit = APP.makeSingleInstance(function(commandLine, workingDirectory) {
+var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
   if (mainWindow) {
     showAndCenter(mainWindow);
   }
@@ -76,43 +76,43 @@ var shouldQuit = APP.makeSingleInstance(function(commandLine, workingDirectory) 
 });
 
 if (shouldQuit) {
-  APP.quit();
+  app.quit();
   return;
 }
 
-APP.commandLine.appendSwitch('ppapi-flash-path', '/opt/google/chrome/PepperFlash/libpepflashplayer.so');
+app.commandLine.appendSwitch('ppapi-flash-path', '/opt/google/chrome/PepperFlash/libpepflashplayer.so');
 
-APP.on('ready', () => {
-  sysTray = new TRAY(APPICON);
-  var contextMenu = MENU.buildFromTemplate([
+app.on('ready', () => {
+  sysTray = new tray(appIcon);
+  var contextMenu = menu.buildFromTemplate([
     { label: 'Show', click: function() { showAndCenter(mainWindow); } },
-    { label: 'Quit', click: function() { APP.quit(); } }
+    { label: 'Quit', click: function() { app.quit(); } }
   ]);
-  sysTray.setToolTip(APPNAME);
+  sysTray.setToolTip(appName);
   sysTray.setContextMenu(contextMenu);
 
   mainWindow = createMainWindow();
 
-  const PAGE = mainWindow.webContents;
+  var page = mainWindow.webContents;
 
-  PAGE.on('dom-ready', () => {
+  page.on('dom-ready', () => {
     showAndCenter(mainWindow);
   });
 
-  PAGE.on('new-window', (e, url) => {
+  page.on('new-window', (e, url) => {
     e.preventDefault();
-    ELECTRON.shell.openExternal(url);
+    electron.shell.openExternal(url);
   });
 });
 
-APP.on('activate', () => {
+app.on('activate', () => {
   showAndCenter(mainWindow);
 });
 
-APP.on('before-quit', () => {
+app.on('before-quit', () => {
   isQuitting = true;
 });
 
-IPC.on('notification-click', () => {
+ipc.on('notification-click', () => {
   showAndCenter(mainWindow);
 });
