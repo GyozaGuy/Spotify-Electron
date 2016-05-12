@@ -1,7 +1,7 @@
 'use strict';
 
 // Change these to customize the app
-var url = 'http://player.spotify.com/?http=1';
+var url = 'http://play.spotify.com/browse?http=1';
 var height = 750;
 var width = 1200;
 
