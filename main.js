@@ -79,6 +79,7 @@ if (shouldQuit) {
 }
 
 app.commandLine.appendSwitch('ppapi-flash-path', '/opt/google/chrome/PepperFlash/libpepflashplayer.so');
+// app.commandLine.appendSwitch('proxy-server', 'localhost:8118');
 
 app.on('ready', () => {
   sysTray = new tray(appIcon);
