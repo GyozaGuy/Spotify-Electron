@@ -78,8 +78,9 @@ if (shouldQuit) {
   return;
 }
 
-app.commandLine.appendSwitch('ppapi-flash-path', '/opt/google/chrome/PepperFlash/libpepflashplayer.so');
-// app.commandLine.appendSwitch('proxy-server', 'localhost:8118');
+app.commandLine.appendSwitch('ppapi-flash-path', 'C:/Program Files (x86)/Google/Chrome/Application/53.0.2785.116/PepperFlash/pepflashplayer.dll');
+app.commandLine.appendSwitch('ppapi-flash-version', '50.0.2661.102');
+app.commandLine.appendSwitch('proxy-server', 'localhost:8118');
 
 app.on('ready', () => {
   sysTray = new tray(appIcon);
