@@ -55,8 +55,8 @@ function showAndCenter(win) {
 function center(win) {
   var electronScreen = electron.screen;
   var size = electronScreen.getPrimaryDisplay().workAreaSize;
-  var x = Math.round(size['width'] / 2 - width / 2);
-  var y = Math.round(size['height'] / 2 - height / 2);
+  var x = Math.round(size.width / 2 - width / 2);
+  var y = Math.round(size.height / 2 - height / 2);
   win.setPosition(x, y);
 }
 
@@ -78,9 +78,13 @@ if (shouldQuit) {
   return;
 }
 
-app.commandLine.appendSwitch('ppapi-flash-path', 'C:/Program Files (x86)/Google/Chrome/Application/53.0.2785.116/PepperFlash/pepflashplayer.dll');
-app.commandLine.appendSwitch('ppapi-flash-version', '50.0.2661.102');
-app.commandLine.appendSwitch('proxy-server', 'localhost:8118');
+// NOTE: uncomment the following lines according to your OS
+// app.commandLine.appendSwitch('ppapi-flash-path', 'C:/Program Files (x86)/Google/Chrome/Application/53.0.2785.116/PepperFlash/pepflashplayer.dll');
+// app.commandLine.appendSwitch('ppapi-flash-version', '53.0.2785.116');
+// app.commandLine.appendSwitch('ppapi-flash-path', '/PATH/TO/HOME/.config/google-chrome/PepperFlash/23.0.0.166/libpepflashplayer.so');
+
+// NOTE: uncomment the following line to use a proxy (e.g. Privoxy)
+// app.commandLine.appendSwitch('proxy-server', 'localhost:8118');
 
 app.on('ready', () => {
   sysTray = new tray(appIcon);
